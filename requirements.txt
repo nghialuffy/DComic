@@ -5,7 +5,8 @@ httplib2==0.9.2
 lxml==4.5.0
 requests==2.23.0
 requests-unixsocket==0.1.5
-system-service==0.3
 systemd-python==234
 urllib3==1.25.8
-
+urlopen==1.0.0
+soupsieve==1.9.5
+public==2019.4.13

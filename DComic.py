@@ -9,6 +9,13 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 def print_usage():
     print("DComic.py -u $URL -p $PATH")
 
+def download_file(url):
+    with open(url.split('/')[-1], 'wb') as f:
+        getreq =requests.get(url, stream = True)
+        f.write(getreq.content)
+    return getreq.status_code
+
+
 #Argument -p path -u url -l listurl -h help
 PATH = os.getcwd()+r"/"
 url = ""
@@ -20,6 +27,7 @@ Usage:  DComic.py [-u|--url] $URL [-p|--path] $PATH
         DComic.py [-l|--list] $FILE [-p|--path] $PATH
 First run: You need to install requirements:
 ------------------------------------------------------------------------
+|                    python -m pip install --upgrade pip                |
 |                    pip install -r requirements.txt                    |
 ------------------------------------------------------------------------
 
@@ -82,14 +90,6 @@ if (flist!=""):
 else:
     urls.append(url)
 
-
-def download_file(url):
-    with open(url.split('/')[-1], 'wb') as f:
-        getreq =requests.get(url, stream = True)
-        f.write(getreq.content)
-    return getreq.status_code
-
-
 for url in urls:
     print("Handling "+ url)
     #Get elements, images
@@ -113,7 +113,7 @@ for url in urls:
 
     #Download mutilthread
 
-    # with ThreadPoolExecutor(max_workers=5) as executor:
+    # with ThreadPoolExecutor(max_workers=12) as executor:
     #     future_to_img = {executor.submit(download_file, img): img for img in imgs}
     #     for future in as_completed(future_to_img):
     #         img = future_to_img[future]
