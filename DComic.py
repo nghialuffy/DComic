@@ -82,6 +82,7 @@ if (flist!=""):
 else:
     urls.append(url)
 
+
 def download_file(url):
     with open(url.split('/')[-1], 'wb') as f:
         getreq =requests.get(url, stream = True)
@@ -98,10 +99,17 @@ for url in urls:
         soup = BeautifulSoup(req.text, 'lxml')
     elements = soup.find_all("img")
     imgs=[]
+    try:
+        for element in elements:
+            if(element['src'].find("jpg")!=-1 or element['src'].find("png")!=-1 or element['src'].find("webp")!=-1):
+                imgs.append(element['src'])
+    except Exception as e:
+        print(e)
 
-    for element in elements:
-        if(element['src'].find("jpg")!=-1 or element['src'].find("png")!=-1):
-            imgs.append(element['src'])
+    # for element in elements:
+    #     if(element['src'].find("jpg")!=-1 or element['src'].find("png")!=-1 or element['src'].find("webp")!=-1):
+    #         imgs.append(element['src'])
+    # print(imgs)   Debut
 
     #Download mutilthread
 
