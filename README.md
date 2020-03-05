@@ -2,8 +2,8 @@
 
                                 Downloader Comic
                                 
-        Usage: python3 Dcomic.py [-u|--url] $URL [-p|--path] $PATH
-               python3 Dcomic.py [-l|--list] $FILE [-p|--path] $PATH
+        Usage: python3 DComic.py [-u|--url] $URL [-p|--path] $PATH
+               python3 DComic.py [-l|--list] $FILE [-p|--path] $PATH
                [If "python3" is not available, you can try "python"]
         First run: You need to install requirements:
         ------------------------------------------------------------------------
