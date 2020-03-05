@@ -7,7 +7,7 @@ from time import gmtime, strftime
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 def print_usage():
-    print("Dcomic.py -u $URL -p $PATH")
+    print("DComic.py -u $URL -p $PATH")
 
 #Argument -p path -u url -l listurl -h help
 PATH = os.getcwd()+r"/"
@@ -16,8 +16,8 @@ flist = ""
 path = ""
 help = """
 ============================Downloader Comic============================
-Usage:  Dcomic.py [-u|--url] $URL [-p|--path] $PATH
-        Dcomic.py [-l|--list] $FILE [-p|--path] $PATH
+Usage:  DComic.py [-u|--url] $URL [-p|--path] $PATH
+        DComic.py [-l|--list] $FILE [-p|--path] $PATH
 First run: You need to install requirements:
 ------------------------------------------------------------------------
 |                    pip install -r requirements.txt                    |
