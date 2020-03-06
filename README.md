@@ -7,6 +7,7 @@
                [If "python3" is not available, you can try "python"]
         First run: You need to install requirements:
         ------------------------------------------------------------------------
+        |                    python -m pip install --upgrade pip                |
         |                    pip install -r requirements.txt                    |
         ------------------------------------------------------------------------
 
