@@ -13,7 +13,7 @@ def print_usage():
     print("DComic.py -u $URL -p $PATH")
 
 def download_file(url):
-    with open(url.split('/')[-1], 'wb') as f:
+    with open(url.split('/')[-1].replace(r"?imgmax=1200", ""), 'wb') as f:
         getreq =requests.get(url, stream = True)
         f.write(getreq.content)
     return getreq.status_code
@@ -26,20 +26,26 @@ def makePdf(pdfFileName, listPages, dir = ''):
 
 
     for page in listPages:
-        cover = Image.open(dir + str(page.split('/')[-1]))
+        try:
+            cover = Image.open(dir + str(page.split('/')[-1]).replace(r"?imgmax=1200", ""))
+            width, height = cover.size
+            if(width > mwidth):
+                mwidth = width
+            if(height > mheight):
+                mheight = height
+        except Exception as e:
+            pass
+            # print(e)
         # print(dir + str(page.split('/')[-1])) Debut
-        width, height = cover.size
-        if(width > mwidth):
-            mwidth = width
-        if(height > mheight):
-            mheight = height
-
-    pdf = FPDF(unit = "pt", format = [width, height])
-
+    pdf = FPDF(unit = "pt", format = [mwidth, mheight])
+    # print(listPages)
     for page in listPages:
-        pdf.add_page()
-        pdf.image(dir + str(page.split('/')[-1]), 0, 0)
-
+        try:
+            pdf.add_page()
+            pdf.image(dir + str(page.split('/')[-1].replace(r"?imgmax=1200", "")), 0, 0)
+        except Exception as e:
+            pass
+            # print(e)
     pdf.output(dir + pdfFileName + ".pdf", "F")
 
 #Argument -p path -u url -l listurl -h help
@@ -124,15 +130,16 @@ for url in urls:
     if (req.status_code == 200):
         soup = BeautifulSoup(req.text, 'lxml')
     elements = soup.find_all("img")
+
     imgs=[]
     try:
         for element in elements:
             if(element['src'].find("jpg")!=-1 or element['src'].find("png")!=-1 or element['src'].find("webp")!=-1):
                 if(element['src'].find("http")!=-1):
-                    imgs.append(element['src'])
+                    imgs.append(element['src'].rstrip("\r\n"))
     except Exception as e:
         print(e)
-
+        
     #Download mutilthread
 
     # with ThreadPoolExecutor(max_workers=12) as executor:
@@ -182,11 +189,10 @@ for url in urls:
         shutil.move(os.path.join(PATH,nameFilePdf+".pdf"), os.path.join(path,nameFilePdf+".pdf"))
     except Exception as e:
         print(e)
-
     print("Removing Images...")
     for img in imgs:
         try:
-            os.remove(os.path.join(PATH,img.split("/")[-1]))
+            os.remove(os.path.join(PATH, img.split("/")[-1].replace(r"?imgmax=1200", "")))
         except Exception as e:
             print(e)
 
