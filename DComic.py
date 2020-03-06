@@ -2,7 +2,10 @@ from bs4 import BeautifulSoup
 import requests
 import sys, getopt
 import urllib.request
+import shutil
 import os
+from fpdf import FPDF
+from PIL import Image
 from time import gmtime, strftime
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -15,9 +18,32 @@ def download_file(url):
         f.write(getreq.content)
     return getreq.status_code
 
+def makePdf(pdfFileName, listPages, dir = ''):
+    if (dir):
+        dir += "\\"
+    mwidth = 0
+    mheight = 0
+
+
+    for page in listPages:
+        cover = Image.open(dir + str(page.split('/')[-1]))
+        # print(dir + str(page.split('/')[-1])) Debut
+        width, height = cover.size
+        if(width > mwidth):
+            mwidth = width
+        if(height > mheight):
+            mheight = height
+
+    pdf = FPDF(unit = "pt", format = [width, height])
+
+    for page in listPages:
+        pdf.add_page()
+        pdf.image(dir + str(page.split('/')[-1]), 0, 0)
+
+    pdf.output(dir + pdfFileName + ".pdf", "F")
 
 #Argument -p path -u url -l listurl -h help
-PATH = os.getcwd()+r"/"
+PATH = os.getcwd()
 url = ""
 flist = ""
 path = ""
@@ -102,14 +128,10 @@ for url in urls:
     try:
         for element in elements:
             if(element['src'].find("jpg")!=-1 or element['src'].find("png")!=-1 or element['src'].find("webp")!=-1):
-                imgs.append(element['src'])
+                if(element['src'].find("http")!=-1):
+                    imgs.append(element['src'])
     except Exception as e:
         print(e)
-
-    # for element in elements:
-    #     if(element['src'].find("jpg")!=-1 or element['src'].find("png")!=-1 or element['src'].find("webp")!=-1):
-    #         imgs.append(element['src'])
-    # print(imgs)   Debut
 
     #Download mutilthread
 
@@ -140,17 +162,32 @@ for url in urls:
 
 
     #Creative folder and Move images to folder
-    namefolder = strftime("%Y%m%d%H%M%S", gmtime())
+    nameFilePdf = strftime("%Y%m%d%H%M%S", gmtime())
+
+    # try:
+    #     print("Creativing folder...")
+    #     os.mkdir(path+r"/"+namefolder)
+    # except:
+    #     print("Error: Not creative folder " + namefolder)
+    #     pass
+    
+    print("Creativing PDF...")
     try:
-        print("Creativing folder...")
-        os.mkdir(path+r"/"+namefolder)
-    except:
-        print("Error: Not creative folder " + namefolder)
-        pass
-    print("Moving images...")
+        makePdf(nameFilePdf, imgs, PATH)
+    except Exception as e:
+        print(e)
+
+    print("Moving PDF...")
+    try:
+        shutil.move(os.path.join(PATH,nameFilePdf+".pdf"), os.path.join(path,nameFilePdf+".pdf"))
+    except Exception as e:
+        print(e)
+
+    print("Removing Images...")
     for img in imgs:
         try:
-            os.rename(PATH + img.split('/')[-1], path + r"/" + namefolder + r"/" + img.split('/')[-1])
+            os.remove(os.path.join(PATH,img.split("/")[-1]))
         except Exception as e:
-            pass
+            print(e)
+
 print("Done...")
