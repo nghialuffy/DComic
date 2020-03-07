@@ -13,7 +13,7 @@ def print_usage():
     print("DComic.py -u $URL -p $PATH")
 
 def download_file(url):
-    with open(url.split('/')[-1].replace(r"?imgmax=1200", ""), 'wb') as f:
+    with open(url.split('/')[-1].split('.')[0]+".jpg", 'wb') as f:
         getreq =requests.get(url, stream = True)
         f.write(getreq.content)
     return getreq.status_code
@@ -27,7 +27,7 @@ def makePdf(pdfFileName, listPages, dir = ''):
 
     for page in listPages:
         try:
-            cover = Image.open(dir + str(page.split('/')[-1]).replace(r"?imgmax=1200", ""))
+            cover = Image.open(dir + str(page.split('/')[-1]).split('.')[0]+".jpg")
             width, height = cover.size
             if(width > mwidth):
                 mwidth = width
@@ -42,7 +42,7 @@ def makePdf(pdfFileName, listPages, dir = ''):
     for page in listPages:
         try:
             pdf.add_page()
-            pdf.image(dir + str(page.split('/')[-1].replace(r"?imgmax=1200", "")), 0, 0)
+            pdf.image(dir + str(page.split('/')[-1].split('.')[0]+".jpg"), 0, 0)
         except Exception as e:
             pass
             # print(e)
@@ -192,7 +192,7 @@ for url in urls:
     print("Removing Images...")
     for img in imgs:
         try:
-            os.remove(os.path.join(PATH, img.split("/")[-1].replace(r"?imgmax=1200", "")))
+            os.remove(os.path.join(PATH, img.split("/")[-1].split('.')[0]+".jpg"))
         except Exception as e:
             print(e)
 
