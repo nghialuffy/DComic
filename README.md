@@ -21,3 +21,5 @@
         --------------------------------    -----------------------------------
         |    -l URLLIST, --list=URLLIST  :  |   URL list target                 |
         --------------------------------    -----------------------------------
+  Support : truyentranhhot.net | nettruyen.com | hentaivn.net | hamtruyen.com | hocvientruyentranh.net | comicvn.net | ...
+
