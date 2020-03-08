@@ -19,34 +19,34 @@ def download_file(url):
     return getreq.status_code
 
 def makePdf(pdfFileName, listPages, dir = ''):
-    if (dir):
-        dir += "\\"
+    # if (dir):
+    #     dir += "\\"
     mwidth = 0
     mheight = 0
 
 
     for page in listPages:
         try:
-            cover = Image.open(dir + str(page.split('/')[-1]).split('.')[0]+".jpg")
+            cover = Image.open(os.path.join(dir, str(page.split('/')[-1]).split('.')[0]+".jpg"))
             width, height = cover.size
             if(width > mwidth):
                 mwidth = width
             if(height > mheight):
                 mheight = height
         except Exception as e:
-            pass
-            # print(e)
+            # pass
+            print(e)
         # print(dir + str(page.split('/')[-1])) Debut
     pdf = FPDF(unit = "pt", format = [mwidth, mheight])
     # print(listPages)
     for page in listPages:
         try:
             pdf.add_page()
-            pdf.image(dir + str(page.split('/')[-1].split('.')[0]+".jpg"), 0, 0)
+            pdf.image(os.path.join(dir, str(page.split('/')[-1].split('.')[0]+".jpg")), 0, 0)
         except Exception as e:
-            pass
-            # print(e)
-    pdf.output(dir + pdfFileName + ".pdf", "F")
+            # pass
+            print(e)
+    pdf.output(os.path.join(dir, pdfFileName) + ".pdf", "F")
 
 #Argument -p path -u url -l listurl -h help
 PATH = os.getcwd()
@@ -130,16 +130,15 @@ for url in urls:
     if (req.status_code == 200):
         soup = BeautifulSoup(req.text, 'lxml')
     elements = soup.find_all("img")
-
     imgs=[]
     try:
         for element in elements:
-            if(element['src'].find("jpg")!=-1 or element['src'].find("png")!=-1 or element['src'].find("webp")!=-1):
-                if(element['src'].find("http")!=-1):
+            if(element['src'].find("jpg")!=-1 or element['src'].find("png")!=-1 or element['src'].find("webp")!=-1  or element['src'].find("jpeg")!=-1):
+                if(element['src'].find("http")!=-1 or element['src'].find("s.fanfox.net")!=-1):
                     imgs.append(element['src'].rstrip("\r\n"))
     except Exception as e:
         print(e)
-        
+    
     #Download mutilthread
 
     # with ThreadPoolExecutor(max_workers=12) as executor:

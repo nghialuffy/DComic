@@ -12,3 +12,4 @@ public==2019.4.13
 pyPdf==1.13
 Pillow==7.0.0
 image==1.5.28
+fpdf==1.7.2
