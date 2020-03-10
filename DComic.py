@@ -41,8 +41,13 @@ def makePdf(pdfFileName, listPages, dir = ''):
     # print(listPages)
     for page in listPages:
         try:
+            try:
+                cover = Image.open(os.path.join(dir, str(page.split('/')[-1]).split('.')[0]+".jpg"))
+                width, height = cover.size
+            except Exception as e:
+                pass
             pdf.add_page()
-            pdf.image(os.path.join(dir, str(page.split('/')[-1].split('.')[0]+".jpg")), 0, 0)
+            pdf.image(os.path.join(dir, str(page.split('/')[-1].split('.')[0]+".jpg")), int((mwidth - width)/2), int((mheight - height)/2))
         except Exception as e:
             # pass
             print(e)
